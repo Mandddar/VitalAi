@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "348536346200",
+    "project_id": "vitalai-raunak",
+    "storage_bucket": "vitalai-raunak.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:348536346200:android:22cc9b591581845abc9c2d",
+        "android_client_info": {
+          "package_name": "com.vitalai.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArDESFj1VPYvIvJdYkDA9qmOOstBC9kpM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
