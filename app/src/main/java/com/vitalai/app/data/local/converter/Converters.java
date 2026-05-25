@@ -1,5 +1,6 @@
 package com.vitalai.app.data.local.converter;
 
+import androidx.annotation.Nullable;
 import androidx.room.TypeConverter;
 
 import com.vitalai.app.domain.model.enums.ActivityLevel;
@@ -41,6 +42,16 @@ import java.util.Date;
  * Every converter explicitly handles {@code null} inputs and returns
  * {@code null} outputs so Room can store optional fields correctly.
  *
+ * IMPORTANT — @Nullable annotations
+ * ──────────────────────────────────
+ * All converter methods that can accept or return null MUST carry
+ * {@code @Nullable} on their parameters and return types. Room's KSP
+ * processor uses these annotations to decide whether to generate
+ * null-check guards ({@code if (x == null) bindNull() else bindString()})
+ * in the DAO implementation. Without {@code @Nullable}, the generated
+ * code calls {@code bindString()} directly, which throws an NPE when the
+ * converted value is null.
+ *
  * Adding new enums
  * ────────────────
  * 1. Define the enum in {@code com.vitalai.app.domain.model.enums}.
@@ -60,12 +71,14 @@ public final class Converters {
     // ──────────────────────────────────────────────────────────────────────
 
     @TypeConverter
-    public static Long fromDate(Date date) {
+    @Nullable
+    public static Long fromDate(@Nullable Date date) {
         return date == null ? null : date.getTime();
     }
 
     @TypeConverter
-    public static Date toDate(Long epochMillis) {
+    @Nullable
+    public static Date toDate(@Nullable Long epochMillis) {
         return epochMillis == null ? null : new Date(epochMillis);
     }
 
@@ -74,12 +87,14 @@ public final class Converters {
     // ──────────────────────────────────────────────────────────────────────
 
     @TypeConverter
-    public static String fromSex(Sex sex) {
+    @Nullable
+    public static String fromSex(@Nullable Sex sex) {
         return sex == null ? null : sex.name();
     }
 
     @TypeConverter
-    public static Sex toSex(String value) {
+    @Nullable
+    public static Sex toSex(@Nullable String value) {
         return value == null ? null : Sex.valueOf(value);
     }
 
@@ -88,12 +103,14 @@ public final class Converters {
     // ──────────────────────────────────────────────────────────────────────
 
     @TypeConverter
-    public static String fromBloodType(BloodType bloodType) {
+    @Nullable
+    public static String fromBloodType(@Nullable BloodType bloodType) {
         return bloodType == null ? null : bloodType.name();
     }
 
     @TypeConverter
-    public static BloodType toBloodType(String value) {
+    @Nullable
+    public static BloodType toBloodType(@Nullable String value) {
         return value == null ? null : BloodType.valueOf(value);
     }
 
@@ -102,12 +119,14 @@ public final class Converters {
     // ──────────────────────────────────────────────────────────────────────
 
     @TypeConverter
-    public static String fromActivityLevel(ActivityLevel level) {
+    @Nullable
+    public static String fromActivityLevel(@Nullable ActivityLevel level) {
         return level == null ? null : level.name();
     }
 
     @TypeConverter
-    public static ActivityLevel toActivityLevel(String value) {
+    @Nullable
+    public static ActivityLevel toActivityLevel(@Nullable String value) {
         return value == null ? null : ActivityLevel.valueOf(value);
     }
 
@@ -116,12 +135,14 @@ public final class Converters {
     // ──────────────────────────────────────────────────────────────────────
 
     @TypeConverter
-    public static String fromSleepPreference(SleepPreference pref) {
+    @Nullable
+    public static String fromSleepPreference(@Nullable SleepPreference pref) {
         return pref == null ? null : pref.name();
     }
 
     @TypeConverter
-    public static SleepPreference toSleepPreference(String value) {
+    @Nullable
+    public static SleepPreference toSleepPreference(@Nullable String value) {
         return value == null ? null : SleepPreference.valueOf(value);
     }
 
@@ -130,12 +151,14 @@ public final class Converters {
     // ──────────────────────────────────────────────────────────────────────
 
     @TypeConverter
-    public static String fromPrimaryGoal(PrimaryGoal goal) {
+    @Nullable
+    public static String fromPrimaryGoal(@Nullable PrimaryGoal goal) {
         return goal == null ? null : goal.name();
     }
 
     @TypeConverter
-    public static PrimaryGoal toPrimaryGoal(String value) {
+    @Nullable
+    public static PrimaryGoal toPrimaryGoal(@Nullable String value) {
         return value == null ? null : PrimaryGoal.valueOf(value);
     }
 
@@ -144,12 +167,14 @@ public final class Converters {
     // ──────────────────────────────────────────────────────────────────────
 
     @TypeConverter
-    public static String fromMetricType(MetricType type) {
+    @Nullable
+    public static String fromMetricType(@Nullable MetricType type) {
         return type == null ? null : type.name();
     }
 
     @TypeConverter
-    public static MetricType toMetricType(String value) {
+    @Nullable
+    public static MetricType toMetricType(@Nullable String value) {
         return value == null ? null : MetricType.valueOf(value);
     }
 
@@ -158,12 +183,14 @@ public final class Converters {
     // ──────────────────────────────────────────────────────────────────────
 
     @TypeConverter
-    public static String fromMetricSource(MetricSource source) {
+    @Nullable
+    public static String fromMetricSource(@Nullable MetricSource source) {
         return source == null ? null : source.name();
     }
 
     @TypeConverter
-    public static MetricSource toMetricSource(String value) {
+    @Nullable
+    public static MetricSource toMetricSource(@Nullable String value) {
         return value == null ? null : MetricSource.valueOf(value);
     }
 
@@ -172,12 +199,14 @@ public final class Converters {
     // ──────────────────────────────────────────────────────────────────────
 
     @TypeConverter
-    public static String fromSleepStage(SleepStage stage) {
+    @Nullable
+    public static String fromSleepStage(@Nullable SleepStage stage) {
         return stage == null ? null : stage.name();
     }
 
     @TypeConverter
-    public static SleepStage toSleepStage(String value) {
+    @Nullable
+    public static SleepStage toSleepStage(@Nullable String value) {
         return value == null ? null : SleepStage.valueOf(value);
     }
 
@@ -186,12 +215,14 @@ public final class Converters {
     // ──────────────────────────────────────────────────────────────────────
 
     @TypeConverter
-    public static String fromInsightCategory(InsightCategory category) {
+    @Nullable
+    public static String fromInsightCategory(@Nullable InsightCategory category) {
         return category == null ? null : category.name();
     }
 
     @TypeConverter
-    public static InsightCategory toInsightCategory(String value) {
+    @Nullable
+    public static InsightCategory toInsightCategory(@Nullable String value) {
         return value == null ? null : InsightCategory.valueOf(value);
     }
 
@@ -200,12 +231,14 @@ public final class Converters {
     // ──────────────────────────────────────────────────────────────────────
 
     @TypeConverter
-    public static String fromInsightSeverity(InsightSeverity severity) {
+    @Nullable
+    public static String fromInsightSeverity(@Nullable InsightSeverity severity) {
         return severity == null ? null : severity.name();
     }
 
     @TypeConverter
-    public static InsightSeverity toInsightSeverity(String value) {
+    @Nullable
+    public static InsightSeverity toInsightSeverity(@Nullable String value) {
         return value == null ? null : InsightSeverity.valueOf(value);
     }
 
@@ -214,12 +247,14 @@ public final class Converters {
     // ──────────────────────────────────────────────────────────────────────
 
     @TypeConverter
-    public static String fromChatRole(ChatRole role) {
+    @Nullable
+    public static String fromChatRole(@Nullable ChatRole role) {
         return role == null ? null : role.name();
     }
 
     @TypeConverter
-    public static ChatRole toChatRole(String value) {
+    @Nullable
+    public static ChatRole toChatRole(@Nullable String value) {
         return value == null ? null : ChatRole.valueOf(value);
     }
 
@@ -228,12 +263,14 @@ public final class Converters {
     // ──────────────────────────────────────────────────────────────────────
 
     @TypeConverter
-    public static String fromGoalType(GoalType type) {
+    @Nullable
+    public static String fromGoalType(@Nullable GoalType type) {
         return type == null ? null : type.name();
     }
 
     @TypeConverter
-    public static GoalType toGoalType(String value) {
+    @Nullable
+    public static GoalType toGoalType(@Nullable String value) {
         return value == null ? null : GoalType.valueOf(value);
     }
 
@@ -242,12 +279,14 @@ public final class Converters {
     // ──────────────────────────────────────────────────────────────────────
 
     @TypeConverter
-    public static String fromGoalStatus(GoalStatus status) {
+    @Nullable
+    public static String fromGoalStatus(@Nullable GoalStatus status) {
         return status == null ? null : status.name();
     }
 
     @TypeConverter
-    public static GoalStatus toGoalStatus(String value) {
+    @Nullable
+    public static GoalStatus toGoalStatus(@Nullable String value) {
         return value == null ? null : GoalStatus.valueOf(value);
     }
 
@@ -256,12 +295,14 @@ public final class Converters {
     // ──────────────────────────────────────────────────────────────────────
 
     @TypeConverter
-    public static String fromHydrationSource(HydrationSource source) {
+    @Nullable
+    public static String fromHydrationSource(@Nullable HydrationSource source) {
         return source == null ? null : source.name();
     }
 
     @TypeConverter
-    public static HydrationSource toHydrationSource(String value) {
+    @Nullable
+    public static HydrationSource toHydrationSource(@Nullable String value) {
         return value == null ? null : HydrationSource.valueOf(value);
     }
 
@@ -270,12 +311,14 @@ public final class Converters {
     // ──────────────────────────────────────────────────────────────────────
 
     @TypeConverter
-    public static String fromDeviceType(DeviceType type) {
+    @Nullable
+    public static String fromDeviceType(@Nullable DeviceType type) {
         return type == null ? null : type.name();
     }
 
     @TypeConverter
-    public static DeviceType toDeviceType(String value) {
+    @Nullable
+    public static DeviceType toDeviceType(@Nullable String value) {
         return value == null ? null : DeviceType.valueOf(value);
     }
 
@@ -284,12 +327,14 @@ public final class Converters {
     // ──────────────────────────────────────────────────────────────────────
 
     @TypeConverter
-    public static String fromAlertType(AlertType type) {
+    @Nullable
+    public static String fromAlertType(@Nullable AlertType type) {
         return type == null ? null : type.name();
     }
 
     @TypeConverter
-    public static AlertType toAlertType(String value) {
+    @Nullable
+    public static AlertType toAlertType(@Nullable String value) {
         return value == null ? null : AlertType.valueOf(value);
     }
 }

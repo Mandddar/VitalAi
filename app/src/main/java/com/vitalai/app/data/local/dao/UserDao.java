@@ -14,4 +14,8 @@ public interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     Single<Long> insert(UserEntity user);
+
+
+    @Query("SELECT id FROM users WHERE email = :email LIMIT 1")
+    Single<Long> getUserIdByEmail(String email);
 }

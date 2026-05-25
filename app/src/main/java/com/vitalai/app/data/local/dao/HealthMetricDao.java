@@ -85,6 +85,18 @@ public interface HealthMetricDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Completable insertAll(List<HealthMetricEntity> metrics);
 
+    /**
+     * Returns the total number of metric rows for a given user.
+     * Used by the synthetic data seeding logic to check whether
+     * metrics have already been generated.
+     *
+     * @param userId Local PK of the owning user.
+     * @return {@link Single} emitting the row count.
+     */
+    @Query("SELECT COUNT(*) FROM health_metrics WHERE user_id = :userId")
+    Single<Integer> countByUser(long userId);
+
+
     // ──────────────────────────────────────────────────────────────────────
     // Update
     // ──────────────────────────────────────────────────────────────────────

@@ -69,6 +69,7 @@ import java.util.Date;
         }
 )
 public class UserEntity {
+    // KSP Cache Invalidation Trigger: Forces regeneration of UserDao_Impl
 
     // ──────────────────────────────────────────────────────────────────────
     // Primary Key

@@ -151,13 +151,9 @@ public class SyntheticDataGenerator {
      *         or errors if the DB insert fails.
      */
     public Completable generate(long userId) {
-        return Completable.fromAction(() -> {
+        return Completable.defer(() -> {
                     List<HealthMetricEntity> batch = buildAllMetrics(userId);
-                    // insertAll is a @Insert DAO method — runs synchronously
-                    // inside fromAction because we are already on IO thread.
-                    healthMetricDao.insertAll(batch)
-                            .subscribeOn(Schedulers.io())
-                            .blockingAwait();
+                    return healthMetricDao.insertAll(batch);
                 })
                 .subscribeOn(Schedulers.io());
     }
