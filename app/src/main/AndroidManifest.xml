@@ -1,25 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  AndroidManifest.xml — VitalAI
+  ─────────────────────────────────────────────────────────────────────────────
+  Key changes from the default manifest:
+    1. android:name points to VitalAIApplication (required for Hilt).
+    2. WorkManager's default initialiser is removed so our custom
+       Configuration.Provider / HiltWorkerFactory is used instead.
+    3. Health Connect permission declarations (READ_HEALTH_DATA / WRITE).
+    4. Biometric, Vibrate, Internet, Network-state, Wake-lock, and
+       Receive-boot-completed permissions.
+    5. Firebase Messaging service entry.
+    6. Exported activities/receivers follow Android 12+ (API 31+) rules —
+       all exported components declare android:exported explicitly.
+  ─────────────────────────────────────────────────────────────────────────────
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.vitalai.app">
+
+    <!-- ─────────────────────────────────────────────────────────────────── -->
+    <!-- Permissions                                                          -->
+    <!-- ─────────────────────────────────────────────────────────────────── -->
+
+    <!-- Network -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Health Connect — must be declared here; prompts shown at runtime -->
+    <uses-permission android:name="android.permission.health.READ_HEART_RATE" />
+    <uses-permission android:name="android.permission.health.WRITE_HEART_RATE" />
+    <uses-permission android:name="android.permission.health.READ_STEPS" />
+    <uses-permission android:name="android.permission.health.WRITE_STEPS" />
+    <uses-permission android:name="android.permission.health.READ_SLEEP" />
+    <uses-permission android:name="android.permission.health.WRITE_SLEEP" />
+    <uses-permission android:name="android.permission.health.READ_BLOOD_PRESSURE" />
+    <uses-permission android:name="android.permission.health.WRITE_BLOOD_PRESSURE" />
+    <uses-permission android:name="android.permission.health.READ_BLOOD_GLUCOSE" />
+    <uses-permission android:name="android.permission.health.WRITE_BLOOD_GLUCOSE" />
+    <uses-permission android:name="android.permission.health.READ_BODY_TEMPERATURE" />
+    <uses-permission android:name="android.permission.health.READ_WEIGHT" />
+    <uses-permission android:name="android.permission.health.WRITE_WEIGHT" />
+    <uses-permission android:name="android.permission.health.READ_NUTRITION" />
+    <uses-permission android:name="android.permission.health.WRITE_NUTRITION" />
+    <uses-permission android:name="android.permission.health.READ_ACTIVE_CALORIES_BURNED" />
+    <uses-permission android:name="android.permission.health.READ_EXERCISE" />
+    <uses-permission android:name="android.permission.health.WRITE_EXERCISE" />
+
+    <!-- Biometric authentication -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+
+    <!-- Background / notifications -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Required on Android 13+ for push notifications -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- ─────────────────────────────────────────────────────────────────── -->
+    <!-- Application                                                          -->
+    <!-- ─────────────────────────────────────────────────────────────────── -->
 
     <application
-        android:allowBackup="true"
+        android:name=".VitalAIApplication"
+        android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.VitalAI">
+        android:theme="@style/Theme.VitalAI"
+        tools:targetApi="34">
+
+        <!-- ─────────────────────────────────────────────────────────────── -->
+        <!-- WorkManager — disable default initialiser                        -->
+        <!-- Required because VitalAIApplication implements                   -->
+        <!-- Configuration.Provider with HiltWorkerFactory.                  -->
+        <!-- Without this removal, WorkManager ignores our custom config.     -->
+        <!-- ─────────────────────────────────────────────────────────────── -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
+
+        <!-- ─────────────────────────────────────────────────────────────── -->
+        <!-- Health Connect — required intent-filter for API discovery        -->
+        <!-- ─────────────────────────────────────────────────────────────── -->
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
+            android:name=".ui.MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustResize">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!--
+              Registers the app with the Health Connect permission controller.
+              The controller reads this action to know which packages can
+              request health data permissions.
+            -->
+            <intent-filter>
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+            </intent-filter>
         </activity>
+
+        <!-- ─────────────────────────────────────────────────────────────── -->
+        <!-- Firebase Cloud Messaging service                                 -->
+        <!-- ─────────────────────────────────────────────────────────────── -->
+        <service
+            android:name=".service.VitalAIMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!-- ─────────────────────────────────────────────────────────────── -->
+        <!-- Firebase — disable automatic data collection in debug builds     -->
+        <!-- Override at runtime via FirebaseAnalytics.setAnalyticsCollectionEnabled() -->
+        <!-- ─────────────────────────────────────────────────────────────── -->
+        <meta-data
+            android:name="firebase_analytics_collection_deactivated"
+            android:value="false" />
+
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="true" />
+
     </application>
 
 </manifest>

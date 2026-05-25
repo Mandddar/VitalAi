@@ -12,7 +12,20 @@
           "package_name": "com.vitalai.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "348536346200-r2l8gs1rf3bm0bd3a8sqkj1kmfbtqrrd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vitalai.app",
+            "certificate_hash": "5b8768ca37372c9d00175bf1bc4166f5e5a3fb3e"
+          }
+        },
+        {
+          "client_id": "348536346200-3ju0c87dp8bbmc18edfoitutv1ehs8jc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyArDESFj1VPYvIvJdYkDA9qmOOstBC9kpM"
@@ -20,7 +33,41 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "348536346200-3ju0c87dp8bbmc18edfoitutv1ehs8jc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:348536346200:android:de92d96122a52e8cbc9c2d",
+        "android_client_info": {
+          "package_name": "com.vitalai.app.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "348536346200-3ju0c87dp8bbmc18edfoitutv1ehs8jc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArDESFj1VPYvIvJdYkDA9qmOOstBC9kpM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "348536346200-3ju0c87dp8bbmc18edfoitutv1ehs8jc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

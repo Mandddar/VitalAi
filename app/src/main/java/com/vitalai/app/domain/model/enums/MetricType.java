@@ -1,0 +1,22 @@
+package com.vitalai.app.domain.model.enums;
+
+public enum MetricType {
+    HEART_RATE,
+    HEART_RATE_VARIABILITY,
+    BLOOD_PRESSURE_SYSTOLIC,
+    BLOOD_PRESSURE_DIASTOLIC,
+    BLOOD_OXYGEN_SPO2,
+    BLOOD_GLUCOSE,
+    BODY_TEMPERATURE,
+    RESPIRATORY_RATE,
+    STEPS,
+    CALORIES_BURNED,
+    DISTANCE,
+    WEIGHT,
+    BODY_FAT_PERCENTAGE,
+    BMI,
+    STRESS_SCORE,
+    SLEEP_SCORE,
+    HYDRATION_ML,
+    MOOD_SCORE
+}
