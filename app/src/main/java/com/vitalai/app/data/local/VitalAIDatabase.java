@@ -6,6 +6,7 @@ import androidx.room.TypeConverters;
 
 import com.vitalai.app.data.local.converter.Converters;
 import com.vitalai.app.data.local.dao.HealthMetricDao;
+import com.vitalai.app.data.local.dao.UserDao;
 import com.vitalai.app.data.local.entity.AchievementEntity;
 import com.vitalai.app.data.local.entity.ChatMessageEntity;
 import com.vitalai.app.data.local.entity.DeviceEntity;
@@ -123,6 +124,8 @@ public abstract class VitalAIDatabase extends RoomDatabase {
      * @return Room-generated implementation of {@link HealthMetricDao}.
      */
     public abstract HealthMetricDao healthMetricDao();
+
+    public abstract UserDao userDao();
 
     // ──────────────────────────────────────────────────────────────────────
     // DAO accessors — TODO: add in future sprints
