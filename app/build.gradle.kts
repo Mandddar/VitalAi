@@ -1,12 +1,12 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.kapt")
-    id("com.google.devtools.ksp")
-    id("com.google.dagger.hilt.android")
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
-    id("org.jetbrains.kotlin.plugin.compose")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt.android)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.kotlin.compose)
 }
 android {
     namespace = "com.vitalai.app"
@@ -231,11 +231,5 @@ kapt {
             "dagger.hilt.android.internal.disableAndroidSuperclassValidation",
             "true"
         )
-    }
-}
-
-configurations.all {
-    resolutionStrategy {
-        force("com.squareup:javapoet:1.13.0")
     }
 }
