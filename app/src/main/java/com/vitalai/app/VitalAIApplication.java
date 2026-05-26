@@ -71,17 +71,11 @@ public class VitalAIApplication extends Application
         UserEntity seedUser = UserEntity.create("Demo User", "demo@vitalai.app");
         seedUser.firebaseUid = "synthetic_seed_user";
 
-        seedDisposable = userDao.insert(seedUser)
+        seedDisposable = userDao.insertAndReturnId(seedUser)
                 .subscribeOn(Schedulers.io())
                 .flatMap(userId -> {
-                    if (userId != -1L) {
-                        // New user inserted — return the new ID
-                        Log.d(TAG, "Seed user inserted with id=" + userId);
-                        return io.reactivex.rxjava3.core.Single.just(userId);
-                    }
-                    // User already exists (IGNORE returned -1). Look up their ID.
-                    Log.d(TAG, "Seed user already exists, looking up ID...");
-                    return userDao.getUserIdByEmail("demo@vitalai.app");
+                    Log.d(TAG, "Seed user processed with id=" + userId);
+                    return io.reactivex.rxjava3.core.Single.just(userId);
                 })
                 .flatMapCompletable(userId -> {
                     Log.d(TAG, "Checking if metrics exist for userId=" + userId);

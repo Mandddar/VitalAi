@@ -5,8 +5,23 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 import com.vitalai.app.data.local.converter.Converters;
+import com.vitalai.app.data.local.dao.AchievementDao;
+import com.vitalai.app.data.local.dao.ChatMessageDao;
+import com.vitalai.app.data.local.dao.DeviceDao;
+import com.vitalai.app.data.local.dao.GoalDao;
+import com.vitalai.app.data.local.dao.HealthConditionDao;
 import com.vitalai.app.data.local.dao.HealthMetricDao;
+import com.vitalai.app.data.local.dao.HydrationLogDao;
+import com.vitalai.app.data.local.dao.InsightDao;
+import com.vitalai.app.data.local.dao.MedicationDao;
+import com.vitalai.app.data.local.dao.ModelMetadataDao;
+import com.vitalai.app.data.local.dao.MoodLogDao;
+import com.vitalai.app.data.local.dao.NotificationPreferenceDao;
+import com.vitalai.app.data.local.dao.UserBaselineDao;
+import com.vitalai.app.data.local.dao.SleepSessionDao;
+import com.vitalai.app.data.local.dao.SleepStageDao;
 import com.vitalai.app.data.local.dao.UserDao;
+import com.vitalai.app.data.local.dao.WorkoutDao;
 import com.vitalai.app.data.local.entity.AchievementEntity;
 import com.vitalai.app.data.local.entity.ChatMessageEntity;
 import com.vitalai.app.data.local.entity.DeviceEntity;
@@ -126,6 +141,36 @@ public abstract class VitalAIDatabase extends RoomDatabase {
     public abstract HealthMetricDao healthMetricDao();
 
     public abstract UserDao userDao();
+
+    public abstract HealthConditionDao healthConditionDao();
+
+    public abstract MedicationDao medicationDao();
+
+    public abstract SleepSessionDao sleepSessionDao();
+
+    public abstract SleepStageDao sleepStageDao();
+
+    public abstract WorkoutDao workoutDao();
+
+    public abstract InsightDao insightDao();
+
+    public abstract ChatMessageDao chatMessageDao();
+
+    public abstract GoalDao goalDao();
+
+    public abstract AchievementDao achievementDao();
+
+    public abstract HydrationLogDao hydrationLogDao();
+
+    public abstract MoodLogDao moodLogDao();
+
+    public abstract DeviceDao deviceDao();
+
+    public abstract ModelMetadataDao modelMetadataDao();
+
+    public abstract UserBaselineDao userBaselineDao();
+
+    public abstract NotificationPreferenceDao notificationPreferenceDao();
 
     // ──────────────────────────────────────────────────────────────────────
     // DAO accessors — TODO: add in future sprints

@@ -2,6 +2,7 @@ package com.vitalai.app.presentation.ui.fragment.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,10 +62,12 @@ public class LoginFragment extends Fragment {
                         try {
                             GoogleSignInAccount account = task.getResult(ApiException.class);
                             if (account != null) {
+                                Log.d("LoginFragment", "Google Sign In Success: " + account.getEmail());
                                 viewModel.signInWithGoogle(account.getIdToken());
                             }
                         } catch (ApiException e) {
-                            Toast.makeText(requireContext(), "Google Sign In Failed", Toast.LENGTH_SHORT).show();
+                            Log.e("LoginFragment", "Google Sign In Failed: StatusCode=" + e.getStatusCode(), e);
+                            Toast.makeText(requireContext(), "Google Sign In Failed (" + e.getStatusCode() + ")", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

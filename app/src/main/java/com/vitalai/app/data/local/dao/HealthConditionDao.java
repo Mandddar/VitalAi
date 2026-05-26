@@ -8,125 +8,119 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.vitalai.app.data.local.entity.UserEntity;
+import com.vitalai.app.data.local.entity.HealthConditionEntity;
+
+import java.util.List;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
 
 /**
- * UserDao
+ * HealthConditionDao
  *
- * Room DAO for all read and write operations against the {@code users} table.
+ * Room DAO for all read and write operations against the {@code health_conditions} table.
  *
  * Return-type strategy
  * ────────────────────
  * • {@link Completable} — Fire-and-forget writes (insert, update, delete).
- * • {@link Single}      — One-shot reads (fetches, exists checks).
- * • {@link LiveData}    — Reactive reads observed by the UI layer.
+ * • {@link Single}      — One-shot snapshot reads (batch fetch, counts).
+ * • {@link LiveData}    — Reactive reads for UI observation (auto-refreshing lists).
  *
  * Architecture layer : Data / Local
- * Table              : users
- * Entity             : {@link UserEntity}
+ * Table              : health_conditions
+ * Entity             : {@link HealthConditionEntity}
  */
 @Dao
-public interface UserDao {
+public interface HealthConditionDao {
 
     // ──────────────────────────────────────────────────────────────────────
     // Insert
     // ──────────────────────────────────────────────────────────────────────
 
     /**
-     * Inserts a new user or replaces an existing one if a conflict occurs.
+     * Inserts a single health condition record.
+     * Replaces on conflict to handle retries / sync collisions.
      *
-     * @param user The user entity to persist.
+     * @param condition The entity to persist.
      * @return {@link Completable} indicating operation completion.
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    Completable insert(UserEntity user);
+    Completable insert(HealthConditionEntity condition);
 
     /**
-     * Inserts a new user and returns their local auto-generated ID.
+     * Inserts a list of conditions in a single transaction.
+     * Useful for initial onboarding or data sync.
      *
-     * @param user The user entity to persist.
-     * @return {@link Single} emitting the new local ID.
+     * @param conditions List of entities to persist.
+     * @return {@link Completable} indicating operation completion.
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    Single<Long> insertAndReturnId(UserEntity user);
+    Completable insertAll(List<HealthConditionEntity> conditions);
 
     // ──────────────────────────────────────────────────────────────────────
     // Query
     // ──────────────────────────────────────────────────────────────────────
 
     /**
-     * Fetches a user by their local primary key.
+     * Returns a snapshot of all conditions for a specific user.
      *
-     * @param id The local auto-generated ID.
-     * @return {@link Single} emitting the user entity.
+     * @param userId Local PK of the owner.
+     * @return {@link Single} emitting the list of conditions.
      */
-    @Query("SELECT * FROM users WHERE id = :id LIMIT 1")
-    Single<UserEntity> getUserById(long id);
+    @Query("SELECT * FROM health_conditions WHERE user_id = :userId ORDER BY condition_name ASC")
+    Single<List<HealthConditionEntity>> getByUserId(long userId);
 
     /**
-     * Fetches a user by their unique Firebase UID.
+     * Observes the list of conditions for a user.
+     * Emits a new list whenever the user's conditions change in the DB.
      *
-     * @param firebaseUid The stable cross-device identity from Firebase Auth.
-     * @return {@link Single} emitting the user entity.
+     * @param userId Local PK of the owner.
+     * @return {@link LiveData} containing the list of conditions.
      */
-    @Query("SELECT * FROM users WHERE firebase_uid = :firebaseUid LIMIT 1")
-    Single<UserEntity> getUserByFirebaseUid(String firebaseUid);
+    @Query("SELECT * FROM health_conditions WHERE user_id = :userId ORDER BY condition_name ASC")
+    LiveData<List<HealthConditionEntity>> observeByUserId(long userId);
 
     /**
-     * Returns a {@link LiveData}-wrapped user record for UI observation.
-     * Room re-emits the user whenever any column in the row changes.
+     * Counts the number of conditions recorded for a user.
      *
-     * @param id The local primary key of the user.
-     * @return Reactive stream of the user entity.
+     * @param userId Local PK of the owner.
+     * @return {@link Single} emitting the count.
      */
-    @Query("SELECT * FROM users WHERE id = :id LIMIT 1")
-    LiveData<UserEntity> observeUser(long id);
-
-    /**
-     * Checks if a user record exists for the given Firebase UID.
-     *
-     * @param firebaseUid The Firebase UID to check.
-     * @return {@link Single} emitting true if a match is found.
-     */
-    @Query("SELECT EXISTS(SELECT 1 FROM users WHERE firebase_uid = :firebaseUid)")
-    Single<Boolean> existsByFirebaseUid(String firebaseUid);
-
-    /**
-     * Returns the local ID for a user with the given email.
-     *
-     * @param email The user's email address.
-     * @return {@link Single} emitting the local ID.
-     */
-    @Query("SELECT id FROM users WHERE email = :email LIMIT 1")
-    Single<Long> getUserIdByEmail(String email);
+    @Query("SELECT COUNT(*) FROM health_conditions WHERE user_id = :userId")
+    Single<Integer> countByUserId(long userId);
 
     // ──────────────────────────────────────────────────────────────────────
     // Update
     // ──────────────────────────────────────────────────────────────────────
 
     /**
-     * Updates an existing user record (matched by primary key).
+     * Updates an existing condition record (matched by PK).
      *
-     * @param user The entity with updated fields.
+     * @param condition The entity with updated fields.
      * @return {@link Completable} indicating operation completion.
      */
     @Update
-    Completable update(UserEntity user);
+    Completable update(HealthConditionEntity condition);
 
     // ──────────────────────────────────────────────────────────────────────
     // Delete
     // ──────────────────────────────────────────────────────────────────────
 
     /**
-     * Deletes a user record (matched by primary key).
-     * Note: cascading deletes will remove child records (metrics, goals, etc.).
+     * Deletes a specific condition record.
      *
-     * @param user The entity to delete.
+     * @param condition The entity to delete.
      * @return {@link Completable} indicating operation completion.
      */
     @Delete
-    Completable delete(UserEntity user);
+    Completable delete(HealthConditionEntity condition);
+
+    /**
+     * Deletes all conditions for a specific user.
+     *
+     * @param userId Local PK of the owner.
+     * @return {@link Completable} indicating operation completion.
+     */
+    @Query("DELETE FROM health_conditions WHERE user_id = :userId")
+    Completable deleteAllByUserId(long userId);
 }
